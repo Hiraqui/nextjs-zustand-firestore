@@ -2,6 +2,8 @@
 // https://nextjs.org/docs/app/building-your-application/rendering/composition-patterns#keeping-server-only-code-out-of-the-client-environment
 "use server";
 
+import { SESSION_COOKIE } from "./config";
+
 import { initializeApp, initializeServerApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore/lite";
 import { getAuth } from "firebase/auth";
@@ -12,7 +14,7 @@ import { firebaseConfig } from "./config";
 import { connectEmulators } from "./emulator-config";
 
 export async function getAuthenticatedAppForUser() {
-  const authIdToken = (await cookies()).get("__session")?.value;
+  const authIdToken = (await cookies()).get(SESSION_COOKIE)?.value;
 
   // Firebase Server App is a new feature in the JS SDK that allows you to
   // instantiate the SDK with credentials retrieved from the client & has
@@ -20,9 +22,11 @@ export async function getAuthenticatedAppForUser() {
   const firebaseServerApp = initializeServerApp(
     // https://github.com/firebase/firebase-js-sdk/issues/8863#issuecomment-2751401913
     initializeApp(firebaseConfig),
-    {
-      authIdToken,
-    }
+    authIdToken
+      ? {
+          authIdToken,
+        }
+      : {}
   );
 
   const auth = getAuth(firebaseServerApp);

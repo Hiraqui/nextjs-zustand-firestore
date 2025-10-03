@@ -22,10 +22,7 @@ export function connectEmulators({
   auth,
   firestore,
 }: ConnectEmulatorsParams = {}) {
-  if (!host)
-    throw new Error(
-      "The NEXT_PUBLIC_FIREBASE_EMULATOR_HOST environment variable is not set"
-    );
+  if (!host) return;
 
   if (shouldConnectAuthEmulator && auth) {
     if (!authEmulatorPort)

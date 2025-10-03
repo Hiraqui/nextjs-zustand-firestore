@@ -6,7 +6,9 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "emulators": "firebase emulators:start --project nextjs-zustand-firestore",
+    "emulators:demo": "firebase emulators:start --project demo-nextjs-zustand-firestore"
   },
   "dependencies": {
     "@radix-ui/react-progress": "^1.1.7",
@@ -15,6 +17,7 @@
     "@radix-ui/react-slot": "^1.2.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "cookies-next": "^6.1.0",
     "firebase": "^12.3.0",
     "lucide-react": "^0.544.0",
     "motion": "^12.23.22",

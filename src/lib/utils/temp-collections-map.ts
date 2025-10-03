@@ -1,4 +1,4 @@
-import { TEMP_COLLECTIONS } from "@/lib/firebase/temp-collections";
+import { TEMP_COLLECTIONS } from "../firebase/config";
 import { STORAGES } from "@/store/client-storages";
 
 /**

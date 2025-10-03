@@ -10,6 +10,10 @@ service cloud.firestore {
       && (resource.data[key] == request.resource.data[key]);
   }
 
+  function isTempCollectionValid(collection){
+    return collection in ['temp-onboarding'];
+    }
+
   match /databases/{database}/documents {
     // Users:
     //   - Authenticated user can read their own
@@ -23,6 +27,15 @@ service cloud.firestore {
       allow update: if request.auth != null
                     && request.resource.data.userId == request.auth.uid
                     && unchanged("email");
+
+        // New assesments:
+        //   - Authenticated user can read
+        //   - Authenticated user can create/update their own
+        //   - Updates are allowed if no fields are added and name is unchanged
+        //   - Deletes are not allowed (default)
+        match /temp/{collection} {
+          allow read, write, update: if request.auth != null && isTempCollectionValid(collection);
+        }
     }
   }
 }

@@ -18,7 +18,7 @@ import {
   type Firestore,
 } from "firebase/firestore/lite";
 
-import { TEMP_COLLECTIONS_NAMES } from "./temp-collections";
+import { TEMP_COLLECTIONS_NAMES } from "./config";
 
 /**
  * Retrieves a value from a user's temporary collection.
@@ -40,7 +40,7 @@ export async function getTempCollection(
 ): Promise<string | null> {
   validateCollectionName(collection);
   try {
-    const docRef = doc(db, collection, userId);
+    const docRef = doc(db, getTempCollectionDocPath(userId, collection));
     const docSnap = await getDoc(docRef);
 
     return docSnap.data()?.value ?? null;
@@ -75,7 +75,9 @@ export async function setTempCollection(
   value: string
 ) {
   validateCollectionName(collection);
-  await setDoc(doc(db, collection, userId), { value });
+  await setDoc(doc(db, getTempCollectionDocPath(userId, collection)), {
+    value,
+  });
 }
 
 /**
@@ -97,7 +99,23 @@ export async function removeTempCollection(
   collection: string
 ) {
   validateCollectionName(collection);
-  await deleteDoc(doc(db, collection, userId));
+  await deleteDoc(doc(db, getTempCollectionDocPath(userId, collection)));
+}
+
+/**
+ * Constructs the Firestore document path for a user's temporary collection.
+ *
+ * This utility function generates the standardized path used to store
+ * temporary collection documents in Firestore. All temp collections
+ * follow the pattern: users/{userId}/temp/{collectionName}
+ *
+ * @param userId - The unique identifier for the user
+ * @param collection - The name of the temporary collection
+ * @returns The complete Firestore document path string
+ * @private
+ */
+function getTempCollectionDocPath(userId: string, collection: string) {
+  return `users/${userId}/temp/${collection}`;
 }
 
 /**
