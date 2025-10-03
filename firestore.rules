@@ -1,0 +1,28 @@
+rules_version = '2';
+
+service cloud.firestore {
+
+  // Determine if the value of the field "key" is the same
+  // before and after the request.
+  function unchanged(key) {
+    return (key in resource.data) 
+      && (key in request.resource.data) 
+      && (resource.data[key] == request.resource.data[key]);
+  }
+
+  match /databases/{database}/documents {
+    // Users:
+    //   - Authenticated user can read their own
+    //   - Authenticated user can create/update their own
+    //   - Updates are allowed if no fields are added and email is unchanged
+    //   - Deletes are not allowed (default)
+    match /users/{userId} {
+      allow read:   if request.auth != null;
+      allow create: if request.auth != null
+                    && request.resource.data.userId == request.auth.uid;
+      allow update: if request.auth != null
+                    && request.resource.data.userId == request.auth.uid
+                    && unchanged("email");
+    }
+  }
+}
