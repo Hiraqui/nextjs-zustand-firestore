@@ -8,7 +8,7 @@ export async function isOnboardingCompleteAction(
 ): Promise<ActionResult<boolean>> {
   const isComplete = Boolean(
     onboardingInfo.name &&
-      onboardingInfo.hobbie &&
+      onboardingInfo.hobby &&
       onboardingInfo.age &&
       onboardingInfo.description
   );
