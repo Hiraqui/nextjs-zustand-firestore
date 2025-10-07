@@ -1,0 +1,77 @@
+"use client";
+
+import { signInWithGoogle } from "@/lib/firebase/auth";
+import { cn } from "@/lib/utils";
+import type { FirebaseError } from "firebase/app";
+import { AuthErrorCodes } from "firebase/auth";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useState, type MouseEventHandler } from "react";
+import { Button } from "../ui/button";
+import Spinner from "../ui/spinner";
+
+const REQUEST_ERROR = "There was an error processing your request";
+const POPUP_ERROR = "Your browser prevented the popup from opening";
+
+export default function SignInWithGoogle() {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleSignIn: MouseEventHandler = async (event) => {
+    event.preventDefault();
+
+    try {
+      await signInWithGoogle();
+      setLoading(true);
+      router.push("/onboarding");
+    } catch (error) {
+      const err = error as FirebaseError;
+      let message = REQUEST_ERROR;
+      switch (err.code) {
+        case AuthErrorCodes.POPUP_BLOCKED:
+          message = POPUP_ERROR;
+          break;
+        case AuthErrorCodes.EXPIRED_POPUP_REQUEST:
+        case AuthErrorCodes.POPUP_CLOSED_BY_USER:
+          console.info(err.message);
+          setLoading(false);
+          return;
+        default:
+      }
+      setError(message);
+
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="font-montserrat flex flex-col items-center">
+      <Button
+        className={cn(
+          "w-full gap-3 border border-gray-400 bg-white font-bold text-gray-700 shadow-xs",
+          "hover:border-gray-400 hover:bg-gray-300 hover:text-gray-700",
+          "focus-visible:ring-gray-400"
+        )}
+        onClick={handleSignIn}
+        disabled={loading}
+        variant="secondary"
+        size="lg"
+      >
+        {loading ? (
+          <Spinner className="size-6 text-blue-500" />
+        ) : (
+          <Image
+            aria-hidden
+            src="/google.svg"
+            alt="Google icon"
+            width={24}
+            height={24}
+          />
+        )}
+        Sign in with Google
+      </Button>
+      {error && <p className="mt-2 text-sm text-destructive">{error}</p>}
+    </div>
+  );
+}
