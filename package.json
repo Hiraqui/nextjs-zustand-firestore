@@ -1,5 +1,9 @@
 {
   "name": "nextjs-zustand-firestore",
+  "author": {
+    "name": "Martin Moro",
+    "email": "dev.martin.moro@gmail.com"
+  },
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -11,9 +15,7 @@
     "emulators:demo": "firebase emulators:start --project demo-nextjs-zustand-firestore"
   },
   "dependencies": {
-    "@radix-ui/react-progress": "^1.1.7",
     "@radix-ui/react-scroll-area": "^1.2.10",
-    "@radix-ui/react-select": "^2.2.6",
     "@radix-ui/react-slot": "^1.2.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
