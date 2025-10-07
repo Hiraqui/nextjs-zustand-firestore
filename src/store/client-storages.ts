@@ -4,8 +4,9 @@
  */
 export const STORAGES = {
   onboarding: "onboarding-storage",
-  assessmentsLayout: "assessment-layout-storage",
-  sidebar: "sidebar-storage",
+
+  // Example additional storages
+  // sidebar: "sidebar-storage",
 } as const;
 
 // Type helper for storage keys
