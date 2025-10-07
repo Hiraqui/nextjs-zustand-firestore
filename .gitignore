@@ -48,3 +48,6 @@ firebase.txt
 .github/copilot-instructions.md
 .github/instructions
 .github/chatmodes
+
+# VSCode
+.vscode/*
