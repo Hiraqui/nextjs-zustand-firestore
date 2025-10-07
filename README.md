@@ -1,5 +1,9 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## What's this?
+
+This repository is an example of how to achieve `firestore` as a temporary database to persist a `zustand` any store, using `Next.js` actions. Instead of using `localStorage` or `sessionStorage`.
+
 ## Getting Started
 
 First, run the development server:
