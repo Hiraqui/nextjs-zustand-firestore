@@ -63,6 +63,8 @@ export const initialState: OnboardingState = {
 export const createOnboardingStore = (
   initState: OnboardingState = initialState
 ) => {
+  let debounceTimer: NodeJS.Timeout | null = null; // Timer for debouncing server action logic
+
   const useOnboardingStoreBase = create<OnboardingStore>()(
     shared(
       subscribeWithSelector(
@@ -78,7 +80,11 @@ export const createOnboardingStore = (
                 return { onboardingInfo: updatedOnboardingValues };
               });
 
-              get().calculateIsComplete();
+              // Clear existing timer and set new one
+              if (debounceTimer) clearTimeout(debounceTimer);
+              debounceTimer = setTimeout(() => {
+                get().calculateIsComplete();
+              }, 500);
             },
             setIsComplete: (isComplete) => set({ isComplete }),
             resetOnboardingInfo: () => {
