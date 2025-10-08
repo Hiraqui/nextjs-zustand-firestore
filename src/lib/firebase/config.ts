@@ -1,4 +1,7 @@
-// Your web app's Firebase configuration
+/**
+ * Firebase configuration object containing all necessary credentials and settings.
+ * All values are loaded from environment variables for security.
+ */
 export const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -8,6 +11,10 @@ export const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
+/**
+ * The name of the session cookie used for authentication.
+ * Must be "__session" for Firebase Hosting compatibility.
+ */
 export const SESSION_COOKIE = "__session";
 
 /**
@@ -19,7 +26,14 @@ export const TEMP_COLLECTIONS = {
   onboarding: "temp-onboarding",
 };
 
+/**
+ * Array of all available temp collection names.
+ * Used for validation in server actions to ensure only authorized collections are accessed.
+ */
 export const TEMP_COLLECTIONS_NAMES = Object.values(TEMP_COLLECTIONS);
-// Type helper for temp collection keys
 
+/**
+ * Type representing the available keys for temp collections.
+ * Provides type safety when referencing temp collection configurations.
+ */
 export type TempCollectionKeys = keyof typeof TEMP_COLLECTIONS;

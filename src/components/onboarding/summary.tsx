@@ -13,6 +13,16 @@ import { Button } from "../ui/button";
 import OnboardingSummaryRow from "./summary-row";
 import Logout from "../auth/logout";
 
+/**
+ * Summary component that displays all collected onboarding information.
+ *
+ * This component shows a comprehensive summary of the user's onboarding data
+ * that has been persisted to Firestore. It displays the user's name, age,
+ * hobby, and optional description in a grid layout with icons. The component
+ * also provides options to redo the onboarding process or logout.
+ *
+ * @returns JSX element representing the onboarding summary display
+ */
 export default function OnboardingSummary() {
   const onboarding = useOnboardingStore((state) => state.onboardingInfo);
   if (!onboarding) {

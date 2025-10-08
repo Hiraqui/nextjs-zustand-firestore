@@ -1,6 +1,15 @@
 import SignInWithGoogle from "@/components/auth/sign-in-with-google";
 import Image from "next/image";
 
+/**
+ * Home page component that serves as the landing page for the application.
+ *
+ * This page displays the main welcome message, explains the demo's purpose,
+ * and provides a Google sign-in button for authentication. It also includes
+ * a footer with a link to the source code repository.
+ *
+ * @returns JSX element representing the home page
+ */
 export default async function Home() {
   return (
     <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">

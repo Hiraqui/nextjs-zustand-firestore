@@ -6,6 +6,18 @@ import { initialState, OnboardingState } from "@/store/onboarding-store";
 import { OnboardingStoreProvider } from "@/store/onboarding-store-provider";
 import { notFound, redirect } from "next/navigation";
 
+/**
+ * Layout component for the onboarding section of the application.
+ *
+ * This layout handles authentication verification, retrieves existing onboarding
+ * data from Firestore, and provides the onboarding store context to child components.
+ * It initializes the store with server-side data or defaults, including the user's
+ * display name from their authentication profile.
+ *
+ * @param props - Component props
+ * @param props.children - Child components to render within the onboarding layout
+ * @returns JSX element representing the onboarding layout with store provider
+ */
 export default async function OnboardingLayout({
   children,
 }: Readonly<{

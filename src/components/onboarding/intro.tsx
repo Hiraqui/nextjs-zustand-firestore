@@ -4,6 +4,16 @@ import Link from "next/link";
 import Logout from "../auth/logout";
 import Step from "./step";
 
+/**
+ * Introduction component for the onboarding flow.
+ *
+ * This component displays the welcome message and explanation of the demo's
+ * functionality. It provides a "Get Started" button to begin the onboarding
+ * process and includes a logout option. The component demonstrates how data
+ * is automatically synced to Firestore during the onboarding process.
+ *
+ * @returns JSX element representing the onboarding introduction step
+ */
 export default function Intro() {
   return (
     <Step

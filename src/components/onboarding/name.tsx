@@ -7,6 +7,16 @@ import useOnboardingForm from "@/hooks/use-onboarding-form";
 import { OnboardingNameSchema } from "@/types/onboarding";
 import Step from "./step";
 
+/**
+ * Name input component for the onboarding flow.
+ *
+ * This component renders a form step where users can enter their name.
+ * It uses the useOnboardingForm hook for state management, validation,
+ * and navigation. The component includes real-time validation and
+ * error display using the OnboardingNameSchema.
+ *
+ * @returns JSX element representing the name input step
+ */
 export default function Name() {
   const { currentValue, error, continueHandler, updateValue } =
     useOnboardingForm(OnboardingNameSchema, STEPS.name.title);

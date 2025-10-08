@@ -3,25 +3,33 @@ import { cookies } from "next/headers";
 
 import { SESSION_COOKIE } from "./lib/firebase/config";
 
-// 1. Specify protected and public routes
-const protectedRoutes = ["/onboarding"];
+/** Routes that require authentication */
+const protectedRoutes = ["/onboarding", "/onboarding/summary"];
+/** Routes that are publicly accessible */
 const publicRoutes = ["/"];
 
+/**
+ * Next.js middleware function that handles authentication and route protection.
+ * Redirects unauthenticated users away from protected routes and authenticated
+ * users to the onboarding flow.
+ *
+ * @param req - The incoming Next.js request object
+ * @returns A NextResponse object with redirect or next() action
+ */
 export default async function middleware(req: NextRequest) {
-  // 2. Check if the current route is protected or public
   const path = req.nextUrl.pathname;
   const isProtectedRoute = protectedRoutes.includes(path);
   const isPublicRoute = publicRoutes.includes(path);
 
-  // 3. Decrypt the session from the cookie
+  // Extract the authentication ID from session cookie
   const authId = (await cookies()).get(SESSION_COOKIE)?.value;
 
-  // 4. Redirect to /login if the user is not authenticated
+  // Redirect to home if user is not authenticated and trying to access protected route
   if (isProtectedRoute && !authId) {
     return NextResponse.redirect(new URL("/", req.nextUrl));
   }
 
-  // 5. Redirect to /onboarding if the user is authenticated
+  // Redirect to onboarding if user is authenticated and on public route
   if (isPublicRoute && authId && path !== "/onboarding") {
     return NextResponse.redirect(new URL("/onboarding", req.nextUrl));
   }
@@ -29,7 +37,10 @@ export default async function middleware(req: NextRequest) {
   return NextResponse.next();
 }
 
-// Routes Middleware should not run on
+/**
+ * Configuration object that specifies which routes the middleware should run on.
+ * Excludes API routes, Next.js static files, images, and PNG files.
+ */
 export const config = {
   matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],
 };

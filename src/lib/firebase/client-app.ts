@@ -6,9 +6,13 @@ import { getAuth } from "firebase/auth";
 import { firebaseConfig } from "./config";
 import { connectEmulators } from "./emulator-config";
 
-// Use automatic initialization
-// https://firebase.google.com/docs/app-hosting/firebase-sdks#initialize-with-no-arguments
+/**
+ * Client-side Firebase app instance.
+ * Initialized with the Firebase configuration and used for all client-side Firebase operations.
+ */
 export const firebaseApp = initializeApp(firebaseConfig);
 
 export const auth = getAuth(firebaseApp);
+
+// Connect to emulators in development environment
 connectEmulators({ auth });

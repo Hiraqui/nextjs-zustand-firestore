@@ -10,12 +10,28 @@ import { ChevronLeftCircle } from "lucide-react";
 
 import { AnimatePresence } from "motion/react";
 
+/**
+ * Props for the onboarding page component.
+ */
 interface OnboardingPageProps {
+  /** Search parameters containing the current onboarding step type */
   searchParams: Promise<{
     type: keyof typeof STEPS | null;
   }>;
 }
 
+/**
+ * Main onboarding page component that renders different steps based on URL parameters.
+ *
+ * This component manages the onboarding flow by displaying different form steps
+ * based on the 'type' search parameter. It uses AnimatePresence for smooth
+ * transitions between steps and includes a back button for navigation.
+ * When no type is specified, it shows the intro screen.
+ *
+ * @param props - Component props
+ * @param props.searchParams - Promise containing search parameters with step type
+ * @returns JSX element representing the current onboarding step
+ */
 export default async function Onboarding({
   searchParams,
 }: OnboardingPageProps) {

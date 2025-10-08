@@ -7,6 +7,19 @@ import { useCallback, useState } from "react";
 
 import { ZodType } from "zod";
 
+/**
+ * Custom hook for managing onboarding form state and navigation.
+ *
+ * This hook provides utilities for handling form input, validation,
+ * and navigation within the onboarding flow. It integrates with the
+ * onboarding store to persist data and provides validation using Zod schemas.
+ *
+ * @param schema - Zod schema for validating the current step's data
+ * @param step - The current onboarding step being processed
+ * @returns Object containing form state and handlers
+ *
+ * @template K - The specific onboarding step type
+ */
 export default function useOnboardingForm<K extends OnboardingSteps>(
   schema: ZodType,
   step: K
@@ -20,6 +33,12 @@ export default function useOnboardingForm<K extends OnboardingSteps>(
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
 
+  /**
+   * Updates the form value and performs validation.
+   * Sets error state if validation fails.
+   *
+   * @param value - The new value to set for the current step
+   */
   const updateValue = (value: string | number) => {
     const parsed = schema.safeParse({ [step]: value });
 
@@ -29,6 +48,11 @@ export default function useOnboardingForm<K extends OnboardingSteps>(
     setOnboardingInfo(step, value);
   };
 
+  /**
+   * Handles form submission and navigation to the next step.
+   * Validates the current form data before proceeding.
+   * Navigates to the next step in the onboarding flow or to the summary page.
+   */
   const continueHandler = useCallback(() => {
     const parsed = schema.safeParse({ [step]: currentValue });
 

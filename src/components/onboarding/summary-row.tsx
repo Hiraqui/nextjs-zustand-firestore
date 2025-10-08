@@ -8,6 +8,21 @@ interface SummaryRowProps {
   iconClassName?: string;
 }
 
+/**
+ * A row component for displaying onboarding summary information.
+ *
+ * This component renders a styled card containing an icon, label, and value.
+ * It's used in the onboarding summary to display collected user information
+ * in a consistent, visually appealing format. The component supports
+ * custom icon styling and handles text truncation for long values.
+ *
+ * @param props - Component props
+ * @param props.icon - Lucide icon component to display
+ * @param props.label - Label text for the data field
+ * @param props.value - Value to display
+ * @param props.iconClassName - Optional CSS classes for icon customization
+ * @returns JSX element representing a summary row
+ */
 export default function OnboardingSummaryRow({
   icon: Icon,
   label,

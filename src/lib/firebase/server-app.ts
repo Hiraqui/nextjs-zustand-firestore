@@ -1,5 +1,3 @@
-// enforces that this code can only be called on the server
-// https://nextjs.org/docs/app/building-your-application/rendering/composition-patterns#keeping-server-only-code-out-of-the-client-environment
 "use server";
 
 import { SESSION_COOKIE } from "./config";
@@ -13,14 +11,20 @@ import { cookies } from "next/headers";
 import { firebaseConfig } from "./config";
 import { connectEmulators } from "./emulator-config";
 
+/**
+ * Creates an authenticated Firebase Server App instance for the current user.
+ * Retrieves the authentication token from the session cookie and initializes
+ * a server-side Firebase app with the user's credentials.
+ *
+ * @returns Object containing the Firebase server app instance and current user
+ * @throws Error if authentication fails or user is not authenticated
+ */
 export async function getAuthenticatedAppForUser() {
   const authIdToken = (await cookies()).get(SESSION_COOKIE)?.value;
 
-  // Firebase Server App is a new feature in the JS SDK that allows you to
-  // instantiate the SDK with credentials retrieved from the client & has
-  // other affordances for use in server environments.
+  // Firebase Server App allows instantiating the SDK with credentials
+  // retrieved from the client and provides server environment affordances
   const firebaseServerApp = initializeServerApp(
-    // https://github.com/firebase/firebase-js-sdk/issues/8863#issuecomment-2751401913
     initializeApp(firebaseConfig),
     authIdToken
       ? {
@@ -36,6 +40,13 @@ export async function getAuthenticatedAppForUser() {
   return { firebaseServerApp, currentUser: auth.currentUser };
 }
 
+/**
+ * Creates a server-side Firestore instance with user authentication.
+ * This function combines Firebase authentication with Firestore initialization
+ * to provide a database instance that respects user-level security rules.
+ *
+ * @returns Object containing the Firestore database instance and current user
+ */
 export async function getServerFirestore() {
   const { firebaseServerApp, currentUser } = await getAuthenticatedAppForUser();
   const firestore = getFirestore(firebaseServerApp);

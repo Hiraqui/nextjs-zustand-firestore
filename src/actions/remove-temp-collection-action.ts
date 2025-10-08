@@ -7,9 +7,14 @@ import { createErrorResult, createSuccessResult } from "@/types/action-result";
 import { TEMP_COLLECTIONS_MAP } from "@/lib/utils/temp-collections-map";
 
 /**
- * Removes a value from a temporary collection for the current user
+ * Server action to remove data from a temporary collection for the authenticated user.
+ *
+ * This action validates the collection name against the allowed collections map,
+ * authenticates the user, and removes their stored data from Firestore. The collection
+ * name is mapped from client storage name to server collection name for security purposes.
+ *
  * @param collection - The client storage name to map to server collection
- * @returns Promise<ActionResult> - Success or error result
+ * @returns Promise resolving to ActionResult indicating success or failure
  */
 export async function removeTempCollectionAction(
   collection: string

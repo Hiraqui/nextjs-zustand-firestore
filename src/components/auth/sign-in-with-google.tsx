@@ -10,14 +10,32 @@ import { useState, type MouseEventHandler } from "react";
 import { Button } from "../ui/button";
 import Spinner from "../ui/spinner";
 
+/** Generic error message for authentication failures */
 const REQUEST_ERROR = "There was an error processing your request";
+/** Error message when browser blocks popup */
 const POPUP_ERROR = "Your browser prevented the popup from opening";
 
+/**
+ * Google sign-in button component with loading states and error handling.
+ *
+ * This component renders a styled button that initiates Google authentication
+ * using Firebase Auth. It handles various authentication states including
+ * loading, success, and different error scenarios like popup blocking.
+ * Upon successful authentication, it navigates to the onboarding page.
+ *
+ * @returns JSX element representing the Google sign-in button with error display
+ */
 export default function SignInWithGoogle() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  /**
+   * Handles the Google sign-in process.
+   * Manages loading state, error handling, and navigation on success.
+   *
+   * @param event - Mouse click event
+   */
   const handleSignIn: MouseEventHandler = async (event) => {
     event.preventDefault();
 

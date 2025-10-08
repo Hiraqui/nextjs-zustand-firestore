@@ -1,6 +1,10 @@
 import * as motion from "motion/react-client";
 import type { PropsWithChildren, ReactNode } from "react";
 
+/**
+ * Animation variants for staggered child elements.
+ * Creates a smooth fade-in and slide-up effect with spring animation.
+ */
 const STAGGER_CHILD_VARIANTS = {
   hidden: { opacity: 0, y: 20 },
   show: {
@@ -16,6 +20,21 @@ interface StepPros extends PropsWithChildren {
   error?: string | null;
 }
 
+/**
+ * A reusable step component for onboarding flow with animations.
+ *
+ * This component provides a consistent layout and animation structure for
+ * onboarding steps. It includes staggered animations for title, description,
+ * error message, and children elements. Uses Framer Motion for smooth
+ * transitions and spring animations.
+ *
+ * @param props - Component props
+ * @param props.children - Content to render within the step
+ * @param props.description - Optional description text
+ * @param props.title - Optional title to display
+ * @param props.error - Optional error message
+ * @returns JSX element representing an animated onboarding step
+ */
 export default function Step({
   children,
   description,

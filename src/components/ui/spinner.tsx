@@ -5,12 +5,24 @@ interface SpinnerProps extends SVGProps<SVGSVGElement> {
   className?: string;
 }
 
+/**
+ * A loading spinner component with rotation animation.
+ *
+ * This component renders an animated SVG spinner that can be used to indicate
+ * loading states throughout the application. It accepts all standard SVG props
+ * and includes a data-testid for testing purposes.
+ *
+ * @param props - Component props
+ * @param props.className - Optional CSS classes to customize appearance
+ * @param props.props - Additional SVG element props
+ * @returns JSX element representing an animated loading spinner
+ */
 export default function Spinner({ className, ...props }: SpinnerProps) {
   return (
     <svg
       className={cn(
         "stroke-primary mr-2 inline size-4 animate-spin",
-        className,
+        className
       )}
       data-testid="spinner"
       xmlns="http://www.w3.org/2000/svg"
