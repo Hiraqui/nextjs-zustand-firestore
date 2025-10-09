@@ -45,7 +45,7 @@ jobs:
         run: npm run test:ci
 
       - name: Build application
-        run: npm run build --experimental-build-mode compile
+        run: npm run build -- --experimental-build-mode compile
         env:
           CI: true
 
