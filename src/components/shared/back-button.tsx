@@ -26,7 +26,14 @@ type BackButtonProps = Omit<ButtonProps, "onClick" | "asChild">;
 const BackButton = React.forwardRef<HTMLButtonElement, BackButtonProps>(
   (props, ref) => {
     const router = useRouter();
-    return <Button ref={ref} {...props} onClick={() => router.back()} />;
+    return (
+      <Button
+        data-testid="back-button"
+        ref={ref}
+        {...props}
+        onClick={() => router.back()}
+      />
+    );
   }
 );
 BackButton.displayName = "BackButton";
