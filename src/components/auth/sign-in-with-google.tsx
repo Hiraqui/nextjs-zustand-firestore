@@ -2,11 +2,15 @@
 
 import { signInWithGoogle } from "@/lib/firebase/auth";
 import { cn } from "@/lib/utils";
+
 import type { FirebaseError } from "firebase/app";
 import { AuthErrorCodes } from "firebase/auth";
+
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+
 import { useState, type MouseEventHandler } from "react";
+
 import { Button } from "../ui/button";
 import Spinner from "../ui/spinner";
 
@@ -38,10 +42,11 @@ export default function SignInWithGoogle() {
    */
   const handleSignIn: MouseEventHandler = async (event) => {
     event.preventDefault();
+    setLoading(true);
+    setError("");
 
     try {
       await signInWithGoogle();
-      setLoading(true);
       router.push("/onboarding");
     } catch (error) {
       const err = error as FirebaseError;
@@ -58,7 +63,6 @@ export default function SignInWithGoogle() {
         default:
       }
       setError(message);
-
       setLoading(false);
     }
   };

@@ -1,7 +1,7 @@
-import React from "react";
 import { render, screen } from "@testing-library/react";
 import Spinner from "./spinner";
-import { SPINNER_TESTID } from "@/tests/constants";
+
+const SPINNER_TESTID = "spinner";
 
 describe("Spinner", () => {
   it("renders without crashing", () => {

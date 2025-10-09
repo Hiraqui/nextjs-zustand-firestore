@@ -44,6 +44,8 @@ export default function useOnboardingForm<K extends OnboardingSteps>(
 
     if (!parsed.success) {
       setError(parsed.error.issues[0]?.message);
+    } else {
+      setError(null);
     }
     setOnboardingInfo(step, value);
   };
