@@ -39,7 +39,7 @@ export const test = base.extend<AuthenticatedFixtures>({
 
         // Create onboarding page object and wait for intro step
         const onboardingPage = new OnboardingPage(homePage.page);
-        onboardingPage.waitForIntroStep();
+        await onboardingPage.waitForIntroStep();
       }).toPass({ timeout: 15_000 });
 
       // Use the authenticated user
