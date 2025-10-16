@@ -158,19 +158,76 @@ The project includes a custom Playwright setup that:
 - **Tests real Firestore persistence**
 - **Validates cross-tab synchronization**
 
+#### Custom Test Fixtures
+
+The project uses custom Playwright fixtures defined in `e2e/fixtures/base-fixtures.ts` that provide:
+
 ```typescript
-// Example E2E test with Firebase emulator
-test("should persist onboarding data to Firestore", async ({
+type AuthenticatedFixtures = {
+  homePage: HomePage;        // Home page object with navigation methods
+  onboardingPage: OnboardingPage; // Onboarding page with form interactions
+  user: {                    // Authenticated user data
+    email: string;
+    name: string;
+  };
+};
+```
+
+#### Authentication Flow
+
+The `user` fixture automatically handles the complete authentication flow:
+
+1. **Navigate to home page** and verify sign-in button
+2. **Handle Google sign-in popup** with test user generation
+3. **Wait for onboarding redirect** with retry logic (45s timeout)
+4. **Provide authenticated user context** for subsequent tests
+
+#### Usage Examples
+
+```typescript
+// Basic authenticated test
+test("should complete onboarding flow", async ({
   onboardingPage,
   user,
 }) => {
+  console.log(`Testing with user: ${user.name} (${user.email})`);
+  
+  await onboardingPage.startOnboarding();
   await onboardingPage.fillCompleteOnboarding(testData);
-
+  
   // Data is automatically persisted to Firestore emulator
   // and synchronized across browser tabs
+  const summaryPage = new SummaryPage(onboardingPage.page);
   await summaryPage.verifyDataPersistence();
 });
+
+// Test with multiple fixtures
+test("should allow logout from onboarding", async ({
+  onboardingPage,
+  user,
+  homePage,
+}) => {
+  await onboardingPage.logoutButton.click();
+  await homePage.verifyWelcomeMessage();
+});
 ```
+
+#### Fixture Dependencies
+
+- **`homePage`**: Available immediately, no dependencies
+- **`user`**: Depends on `homePage` and `context`, handles full auth flow (45s timeout)
+- **`onboardingPage`**: Depends on `user` and `homePage`, provides authenticated onboarding context
+
+#### Advanced Testing Features
+
+The fixture implementation includes several advanced features for robust testing:
+
+- **Retry Logic**: The authentication flow uses `toPass()` with custom intervals `[1000, 2000, 3000]`
+- **Page Promise Handling**: Properly waits for Google sign-in popup window
+- **User Generation**: Creates unique test users with `generateNewUserAndLogin()`
+- **State Isolation**: Each test gets a fresh authenticated user context
+- **Timeout Management**: Custom 45-second timeout for authentication flow
+- **Dependency Injection**: Fixtures are properly chained to ensure correct initialization order
 
 ## 🏢 Project Structure
 
@@ -197,6 +254,17 @@ src/
 └── app/
     ├── onboarding/                  # Onboarding flow pages
     └── page.tsx                     # Landing page
+
+e2e/                            # End-to-end testing with Playwright
+├── fixtures/
+│   └── base-fixtures.ts            # Custom authenticated test fixtures
+├── pages/                          # Page Object Model classes
+│   ├── google-sign-in-page.ts     # Google OAuth page interactions
+│   ├── home-page.ts                # Home page interactions
+│   ├── onboarding-page.ts          # Onboarding form interactions
+│   └── summary-page.ts             # Summary page verification
+├── home.spec.ts                    # Basic application tests
+└── onboarding.spec.ts              # Authenticated onboarding flow tests
 ```
 
 ## 🔐 Security Features
