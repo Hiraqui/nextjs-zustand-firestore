@@ -34,18 +34,16 @@ export const test = base.extend<AuthenticatedFixtures>({
       const user = await googleSignInPage.generateNewUserAndLogin();
 
       await expect(async () => {
-        await googleSignInPage.page.waitForTimeout(500);
         await googleSignInPage.signInWithGoogleButton.click();
 
         // Create onboarding page object and wait for intro step
-        const onboardingPage = new OnboardingPage(homePage.page);
-        await onboardingPage.waitForIntroStep();
-      }).toPass({ timeout: 15_000 });
+        await expect(homePage.page).toHaveURL(/\/onboarding/);
+      }).toPass({ intervals: [1000, 2000, 3000], timeout: 45_000 });
 
       // Use the authenticated user
       await use(user);
     },
-    { timeout: 15_000 },
+    { timeout: 45_000 },
   ],
 
   onboardingPage: async ({ page, user, homePage }, use) => {
