@@ -164,9 +164,10 @@ The project uses custom Playwright fixtures defined in `e2e/fixtures/base-fixtur
 
 ```typescript
 type AuthenticatedFixtures = {
-  homePage: HomePage;        // Home page object with navigation methods
+  homePage: HomePage; // Home page object with navigation methods
   onboardingPage: OnboardingPage; // Onboarding page with form interactions
-  user: {                    // Authenticated user data
+  user: {
+    // Authenticated user data
     email: string;
     name: string;
   };
@@ -179,22 +180,19 @@ The `user` fixture automatically handles the complete authentication flow:
 
 1. **Navigate to home page** and verify sign-in button
 2. **Handle Google sign-in popup** with test user generation
-3. **Wait for onboarding redirect** with retry logic (45s timeout)
+3. **Wait for onboarding redirect** with retry logic (45s timeout) and specific URL timeout (10s)
 4. **Provide authenticated user context** for subsequent tests
 
 #### Usage Examples
 
 ```typescript
 // Basic authenticated test
-test("should complete onboarding flow", async ({
-  onboardingPage,
-  user,
-}) => {
+test("should complete onboarding flow", async ({ onboardingPage, user }) => {
   console.log(`Testing with user: ${user.name} (${user.email})`);
-  
+
   await onboardingPage.startOnboarding();
   await onboardingPage.fillCompleteOnboarding(testData);
-  
+
   // Data is automatically persisted to Firestore emulator
   // and synchronized across browser tabs
   const summaryPage = new SummaryPage(onboardingPage.page);
@@ -226,7 +224,7 @@ The fixture implementation includes several advanced features for robust testing
 - **Page Promise Handling**: Properly waits for Google sign-in popup window
 - **User Generation**: Creates unique test users with `generateNewUserAndLogin()`
 - **State Isolation**: Each test gets a fresh authenticated user context
-- **Timeout Management**: Custom 45-second timeout for authentication flow
+- **Timeout Management**: Custom 45-second timeout for authentication flow with 10-second URL navigation timeout
 - **Dependency Injection**: Fixtures are properly chained to ensure correct initialization order
 
 ## 🏢 Project Structure

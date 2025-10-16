@@ -37,7 +37,9 @@ export const test = base.extend<AuthenticatedFixtures>({
         await googleSignInPage.signInWithGoogleButton.click();
 
         // Create onboarding page object and wait for intro step
-        await expect(homePage.page).toHaveURL(/\/onboarding/);
+        await expect(homePage.page).toHaveURL(/\/onboarding/, {
+          timeout: 10_000,
+        });
       }).toPass({ intervals: [1000, 2000, 3000], timeout: 45_000 });
 
       // Use the authenticated user

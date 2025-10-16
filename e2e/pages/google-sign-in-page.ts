@@ -9,7 +9,6 @@ export class GoogleSignInPage {
   readonly generateUserButton: Locator;
   readonly emailInput: Locator;
   readonly nameInput: Locator;
-  readonly signInWithGoogleButton: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -24,9 +23,11 @@ export class GoogleSignInPage {
     });
     this.emailInput = page.getByLabel("Email");
     this.nameInput = page.getByLabel("Display name");
-    this.signInWithGoogleButton = page.getByRole("button", {
-      name: "Sign in with Google.com",
-    });
+  }
+
+  /** Final sign-in button locator */
+  get signInWithGoogleButton(): Locator {
+    return this.page.getByRole("button", { name: "Sign in with Google.com" });
   }
 
   /**
@@ -63,6 +64,8 @@ export class GoogleSignInPage {
     if (!name || !email) {
       throw new Error("Failed to generate user information");
     }
+
+    await expect(this.signInWithGoogleButton).toBeEnabled();
 
     return { name, email };
   }

@@ -83,7 +83,7 @@ export class OnboardingPage {
     // Clear and fill the input with typing simulation
     await this.nameInput.click();
     await this.nameInput.clear();
-    await this.nameInput.pressSequentially(name, { delay: 50 });
+    await this.nameInput.fill(name);
     await expect(this.nameInput).toHaveValue(name);
 
     // Wait a bit for validation and state updates
