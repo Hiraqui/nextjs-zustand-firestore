@@ -4,20 +4,38 @@ import { GoogleSignInPage } from "../pages/google-sign-in-page";
 import { HomePage } from "../pages/home-page";
 import { OnboardingPage } from "../pages/onboarding-page";
 
+/**
+ * Type definition for authenticated test fixtures.
+ * Provides page objects and user data for authenticated test scenarios.
+ */
 type AuthenticatedFixtures = {
+  /** Home page object for navigation and interactions */
   homePage: HomePage;
+  /** Onboarding page object for authenticated user interactions */
   onboardingPage: OnboardingPage;
+  /** Authenticated user object with email and display name */
   user: {
     email: string;
     name: string;
   };
 };
 
+/**
+ * Extended Playwright test with authenticated user fixtures.
+ * Provides automatic user authentication and page object setup for onboarding tests.
+ */
 export const test = base.extend<AuthenticatedFixtures>({
+  /**
+   * Home page fixture that creates and initializes a HomePage instance.
+   */
   homePage: async ({ page }, use) => {
     await use(new HomePage(page));
   },
 
+  /**
+   * User fixture that performs complete authentication flow with dynamically generated user.
+   * Handles Google sign-in popup, user generation, and authentication completion.
+   */
   user: [
     async ({ homePage, context }, use) => {
       // Navigate to home page
@@ -33,13 +51,13 @@ export const test = base.extend<AuthenticatedFixtures>({
       await googleSignInPage.waitForPageLoad();
       const user = await googleSignInPage.generateNewUserAndLogin();
 
+      // Try signing in with more robust error handling
       await expect(async () => {
+        await googleSignInPage.page.waitForTimeout(1000);
         await googleSignInPage.signInWithGoogleButton.click();
 
         // Create onboarding page object and wait for intro step
-        await expect(homePage.page).toHaveURL(/\/onboarding/, {
-          timeout: 10_000,
-        });
+        await expect(homePage.page).toHaveURL(/\/onboarding/);
       }).toPass({ intervals: [1000, 2000, 3000], timeout: 45_000 });
 
       // Use the authenticated user
@@ -48,12 +66,15 @@ export const test = base.extend<AuthenticatedFixtures>({
     { timeout: 45_000 },
   ],
 
-  onboardingPage: async ({ page, user, homePage }, use) => {
+  /**
+   * Onboarding page fixture that creates an authenticated onboarding page instance.
+   * Depends on user fixture for authentication setup.
+   */
+  onboardingPage: async ({ page, user }, use) => {
     // User is authenticated via the user fixture
     void user; // Ensure user fixture is used
-    void homePage; // Ensure home page fixture is used
 
-    // Create onboarding page object and wait for intro step
+    // Create onboarding page object and wait for page to load
     const onboardingPage = new OnboardingPage(page);
     await onboardingPage.waitForIntroStep();
 

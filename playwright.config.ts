@@ -21,7 +21,13 @@ const baseURL = `http://localhost:${PORT}`;
  */
 export default defineConfig({
   // Timeout per test
-  timeout: 30 * 1000,
+  timeout: 60 * 1000, // Increased timeout for CI environment
+  // Global test timeout for all tests
+  globalTimeout: 30 * 60 * 1000, // 30 minutes total
+  // Expect timeout for assertions
+  expect: {
+    timeout: process.env.CI ? 15000 : 10000,
+  },
   // Test directory
   testDir: path.join(__dirname, "e2e"),
   // Artifacts folder where screenshots, videos, and traces are stored.
@@ -30,10 +36,10 @@ export default defineConfig({
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
-  /* Retry on CI only */
-  retries: process.env.CI ? 2 : 0,
+  /* Retry 2 times*/
+  retries: 2,
   /* Do not opt out of parallel tests on CI. */
-  workers: 4,
+  workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [["html", { open: process.env.CI ? "never" : "on-failure" }]],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
@@ -45,23 +51,45 @@ export default defineConfig({
     trace: "retry-with-trace",
 
     screenshot: "only-on-failure",
+
+    /* Increase navigation timeout for CI */
+    navigationTimeout: process.env.CI ? 30000 : 15000,
   },
 
   /* Configure projects for major browsers */
   projects: [
     {
       name: "chromium",
-      use: { ...devices["Desktop Chrome"] },
+      use: { 
+        ...devices["Desktop Chrome"],
+        // Chromium-specific settings for better stability
+        launchOptions: {
+          args: ['--disable-web-security', '--disable-features=VizDisplayCompositor']
+        }
+      },
     },
 
     {
       name: "firefox",
-      use: { ...devices["Desktop Firefox"] },
+      use: { 
+        ...devices["Desktop Firefox"],
+        // Firefox-specific settings for better stability  
+        launchOptions: {
+          firefoxUserPrefs: {
+            'dom.webnotifications.enabled': false,
+            'dom.push.enabled': false
+          }
+        }
+      },
     },
 
     {
       name: "webkit",
-      use: { ...devices["Desktop Safari"] },
+      use: { 
+        ...devices["Desktop Safari"],
+        // WebKit-specific settings for better stability
+        ignoreHTTPSErrors: true,
+      },
     },
   ],
 

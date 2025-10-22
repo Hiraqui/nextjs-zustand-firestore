@@ -49,6 +49,7 @@ export class OnboardingPage {
    */
   async waitForIntroStep() {
     await this.page.waitForLoadState("domcontentloaded");
+    await this.page.waitForLoadState("networkidle");
     await expect(this.welcomeTitle).toBeVisible({ timeout: 15000 });
     await expect(this.getStartedButton).toBeVisible();
     await expect(this.logoutButton).toBeVisible();
